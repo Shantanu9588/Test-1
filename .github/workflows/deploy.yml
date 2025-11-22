@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Code
@@ -21,15 +23,30 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build App
         run: npm run build
+
+      - name: Show build output (diagnostic)
+        run: |
+          echo "Working dir: $(pwd)"
+          echo "Build dir listing:"
+          ls -la build || true
+          if [ -f build/index.html ]; then
+            echo "FOUND build/index.html"
+            head -n 5 build/index.html
+          else
+            echo "ERROR: build/index.html NOT FOUND"
+            exit 1
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+          publish_branch: gh-pages
           user_name: github-actions
           user_email: github-actions@github.com
+          keep_history: false

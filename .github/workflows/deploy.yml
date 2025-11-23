@@ -31,11 +31,11 @@ jobs:
       - name: Show build output (diagnostic)
         run: |
           echo "Working dir: $(pwd)"
-          echo "Build dir listing:"
-          ls -la build || true
-          if [ -f build/index.html ]; then
-            echo "FOUND build/index.html"
-            head -n 5 build/index.html
+          echo "Dist dir listing:"
+          ls -la dist || true
+          if [ -f dist/index.html ]; then
+            echo "FOUND dist/index.html"
+            head -n 5 dist/index.html
           else
             echo "ERROR: build/index.html NOT FOUND"
             exit 1
